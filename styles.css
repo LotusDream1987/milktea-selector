@@ -698,3 +698,45 @@ button:focus {
     min-width: 80px;
   }
 }
+.btn.accent {
+  color: #21324f;
+  background: linear-gradient(115deg, #ffd7a1, #ffb88f);
+}
+
+.recent-picks {
+  margin-top: 10px;
+  border: 1px dashed rgba(186, 211, 232, 0.9);
+  border-radius: 14px;
+  background: linear-gradient(120deg, rgba(245, 252, 255, 0.9), rgba(249, 255, 250, 0.9));
+  padding: 10px 12px;
+}
+
+.recent-title {
+  margin: 0 0 8px;
+  color: #3a5f84;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.recent-empty {
+  margin: 0;
+  color: #567593;
+  font-size: 0.86rem;
+}
+
+.recent-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.recent-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(181, 209, 233, 0.9);
+  background: linear-gradient(130deg, #f2f9ff, #effff6);
+  color: #395f82;
+  font-size: 0.83rem;
+}

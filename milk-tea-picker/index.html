@@ -17,7 +17,7 @@
           <p class="hero-sub">Daily Milk Tea Picker</p>
           <h1>今天喝什么奶茶</h1>
           <p class="hero-desc">
-            城市级热榜 + 加盟品牌扩充 + 治愈赠语。纠结的时候，让它替你做一次温柔选择。
+            全国省市联动筛选 + 城市热榜 + 加盟品牌扩充 + 治愈赠语。纠结的时候，让它替你做一次温柔选择。
           </p>
 
           <div class="stat-row">
@@ -51,12 +51,16 @@
       <section class="panel glass">
         <div class="control-grid">
           <label class="field">
-            <span>地区</span>
-            <select id="regionSelect"></select>
+            <span>省份</span>
+            <select id="provinceSelect"></select>
           </label>
           <label class="field">
             <span>城市</span>
             <select id="citySelect"></select>
+          </label>
+          <label class="field">
+            <span>城市快速搜索</span>
+            <input id="citySearch" type="text" placeholder="输入城市名，例如：苏州" autocomplete="off" />
           </label>
           <label class="field">
             <span>品类</span>
@@ -82,6 +86,10 @@
                 <input id="onlyTopFiveToggle" type="checkbox" />
                 <span>仅在 TOP5 里抽</span>
               </label>
+              <label class="switch-line">
+                <input id="avoidRepeatToggle" type="checkbox" checked />
+                <span>避免重复推荐</span>
+              </label>
               <button id="clearTopPickBtn" class="btn ghost small">清空热榜选择</button>
             </div>
           </div>
@@ -102,6 +110,7 @@
         <div class="action-row">
           <button id="dailyBtn" class="btn primary">今日固定推荐</button>
           <button id="randomBtn" class="btn secondary">再抽一杯</button>
+          <button id="surpriseBtn" class="btn accent">来点惊喜</button>
           <button id="resetFiltersBtn" class="btn ghost">重置筛选</button>
         </div>
       </section>
@@ -115,18 +124,20 @@
         <article id="resultCard" class="result-card empty">
           <p>设置筛选条件后，点击“今日固定推荐”或“再抽一杯”。</p>
         </article>
+        <div id="recentPicks" class="recent-picks"></div>
       </section>
 
       <section class="tips glass">
         <h3>布局说明</h3>
         <p>
-          先选地区和城市，再看城市热门 TOP5；你可以直接点某个 TOP 项锁定抽取，或者开启“仅在 TOP5 里抽”。
+          先选省份和城市，再看城市热门 TOP5；你可以直接点某个 TOP 项锁定抽取，或者开启“仅在 TOP5 里抽”。
           推荐结果会给出显眼的暖心赠语。
         </p>
       </section>
     </main>
 
     <script src="./data.js"></script>
+    <script src="./province-city.js"></script>
     <script src="./app.js"></script>
   </body>
 </html>

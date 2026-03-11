@@ -1,30 +1,36 @@
 ﻿(() => {
   const baseBrands = Array.isArray(window.MILK_TEA_DATA) ? window.MILK_TEA_DATA : [];
 
-  const REGION_ORDER = ["华北", "华东", "华南", "华中", "西南", "西北", "东北", "港澳台"];
+  const REGION_ORDER = ["\u534e\u5317", "\u534e\u4e1c", "\u534e\u5357", "\u534e\u4e2d", "\u897f\u5357", "\u897f\u5317", "\u4e1c\u5317", "\u6e2f\u6fb3\u53f0"];
 
-  const CITY_GROUPS = {
-    华北: ["北京", "天津", "石家庄", "太原", "呼和浩特", "保定", "廊坊", "唐山", "秦皇岛", "沧州", "邯郸"],
-    华东: ["上海", "南京", "苏州", "无锡", "常州", "杭州", "宁波", "温州", "合肥", "芜湖", "福州", "厦门", "泉州", "南昌", "济南", "青岛", "烟台", "潍坊", "绍兴", "金华", "嘉兴"],
-    华南: ["广州", "深圳", "佛山", "东莞", "珠海", "中山", "惠州", "汕头", "南宁", "桂林", "海口", "三亚"],
-    华中: ["武汉", "长沙", "郑州", "洛阳", "南阳", "襄阳", "宜昌", "岳阳", "株洲", "湘潭", "开封"],
-    西南: ["成都", "重庆", "贵阳", "昆明", "拉萨", "绵阳", "遵义", "大理", "南充", "乐山"],
-    西北: ["西安", "兰州", "银川", "西宁", "乌鲁木齐", "咸阳", "宝鸡", "延安"],
-    东北: ["沈阳", "大连", "长春", "吉林", "哈尔滨", "齐齐哈尔"],
-    港澳台: ["香港", "澳门", "台北", "新北", "台中", "台南", "高雄"]
+  const REGION_TO_PROVINCES = {
+    "\u534e\u5317": ["\u5317\u4eac\u5e02", "\u5929\u6d25\u5e02", "\u6cb3\u5317\u7701", "\u5c71\u897f\u7701", "\u5185\u8499\u53e4\u81ea\u6cbb\u533a"],
+    "\u534e\u4e1c": ["\u4e0a\u6d77\u5e02", "\u6c5f\u82cf\u7701", "\u6d59\u6c5f\u7701", "\u5b89\u5fbd\u7701", "\u798f\u5efa\u7701", "\u6c5f\u897f\u7701", "\u5c71\u4e1c\u7701"],
+    "\u534e\u5357": ["\u5e7f\u4e1c\u7701", "\u5e7f\u897f\u58ee\u65cf\u81ea\u6cbb\u533a", "\u6d77\u5357\u7701"],
+    "\u534e\u4e2d": ["\u6cb3\u5357\u7701", "\u6e56\u5317\u7701", "\u6e56\u5357\u7701"],
+    "\u897f\u5357": ["\u91cd\u5e86\u5e02", "\u56db\u5ddd\u7701", "\u8d35\u5dde\u7701", "\u4e91\u5357\u7701", "\u897f\u85cf\u81ea\u6cbb\u533a"],
+    "\u897f\u5317": ["\u9655\u897f\u7701", "\u7518\u8083\u7701", "\u9752\u6d77\u7701", "\u5b81\u590f\u56de\u65cf\u81ea\u6cbb\u533a", "\u65b0\u7586\u7ef4\u543e\u5c14\u81ea\u6cbb\u533a"],
+    "\u4e1c\u5317": ["\u8fbd\u5b81\u7701", "\u5409\u6797\u7701", "\u9ed1\u9f99\u6c5f\u7701"],
+    "\u6e2f\u6fb3\u53f0": ["\u9999\u6e2f\u7279\u522b\u884c\u653f\u533a", "\u6fb3\u95e8\u7279\u522b\u884c\u653f\u533a", "\u53f0\u6e7e\u7701"]
   };
+
+  const PROVINCE_ORDER = Array.isArray(window.PROVINCE_CITY_DATA?.PROVINCE_ORDER)
+    ? window.PROVINCE_CITY_DATA.PROVINCE_ORDER
+    : [];
+  const PROVINCE_CITY_MAP = window.PROVINCE_CITY_DATA?.PROVINCE_CITY_MAP || {};
 
   const REGION_SCOPES = {
     national: REGION_ORDER,
-    coastal: ["华北", "华东", "华南", "港澳台"],
-    south: ["华南", "华中", "西南", "华东"],
-    north: ["华北", "华东", "华中", "东北"],
-    west: ["西南", "西北", "华中", "华东"],
-    central: ["华中", "华东", "华南", "华北"],
-    tw_hk: ["港澳台", "华东", "华南"]
+    coastal: ["\u534e\u5317", "\u534e\u4e1c", "\u534e\u5357", "\u6e2f\u6fb3\u53f0"],
+    south: ["\u534e\u5357", "\u534e\u4e2d", "\u897f\u5357", "\u534e\u4e1c"],
+    north: ["\u534e\u5317", "\u534e\u4e1c", "\u534e\u4e2d", "\u4e1c\u5317"],
+    west: ["\u897f\u5357", "\u897f\u5317", "\u534e\u4e2d", "\u534e\u4e1c"],
+    central: ["\u534e\u4e2d", "\u534e\u4e1c", "\u534e\u5357", "\u534e\u5317"],
+    tw_hk: ["\u6e2f\u6fb3\u53f0", "\u534e\u4e1c", "\u534e\u5357"]
   };
 
-  const COVERAGE_LEVEL_SIZE = { all: 999, wide: 8, standard: 6, focus: 4, boutique: 2, hotspot: 1 };
+  const COVERAGE_LEVEL_RATIO = { all: 1, wide: 1, standard: 0.72, focus: 0.52, boutique: 0.32, hotspot: 0.16 };
+  const COVERAGE_LEVEL_MIN = { all: 9999, wide: 18, standard: 12, focus: 8, boutique: 5, hotspot: 3 };
 
   const BASE_COVERAGE_OVERRIDES = {
     heytea: "wide",
@@ -186,11 +192,15 @@
   }
 
   function getAllCities() {
-    return uniqueValues(REGION_ORDER.flatMap((region) => CITY_GROUPS[region] || []));
+    return uniqueValues(PROVINCE_ORDER.flatMap((province) => PROVINCE_CITY_MAP[province] || []));
   }
 
-  function getCitiesByRegion(region) {
-    return region === "全国" ? getAllCities() : CITY_GROUPS[region] || [];
+  function getCitiesByProvince(province) {
+    return province === "\u5168\u56fd" ? getAllCities() : PROVINCE_CITY_MAP[province] || [];
+  }
+
+  function getAllProvinces() {
+    return ["\u5168\u56fd", ...PROVINCE_ORDER];
   }
 
   function inferProfile(name) {
@@ -271,26 +281,52 @@
 
   const mergedRawBrands = mergeBrandCatalog();
 
-  function deriveBrandCities(brand) {
-    const level = brand.coverage || BASE_COVERAGE_OVERRIDES[brand.id] || "standard";
-    const takeSize = COVERAGE_LEVEL_SIZE[level] || COVERAGE_LEVEL_SIZE.standard;
+  function deriveBrandProvinces(brand) {
+    const explicit = Array.isArray(brand.provinces) ? brand.provinces : [];
+    const filteredExplicit = uniqueValues(explicit).filter((province) => PROVINCE_ORDER.includes(province));
+    if (filteredExplicit.length) return filteredExplicit;
 
-    return uniqueValues(
-      (brand.regions || []).flatMap((region) => {
-        const group = CITY_GROUPS[region] || [];
-        return takeSize >= group.length ? group : group.slice(0, takeSize);
-      })
-    );
+    const fromRegions = uniqueValues((brand.regions || []).flatMap((region) => REGION_TO_PROVINCES[region] || []));
+    if (fromRegions.length) return fromRegions;
+
+    return [...PROVINCE_ORDER];
+  }
+
+  function deriveBrandCities(brand, provinces) {
+    const level = brand.coverage || BASE_COVERAGE_OVERRIDES[brand.id] || "standard";
+    const cityPool = uniqueValues(provinces.flatMap((province) => PROVINCE_CITY_MAP[province] || []));
+
+    if (level === "all" || level === "wide") {
+      return cityPool;
+    }
+
+    const ratio = COVERAGE_LEVEL_RATIO[level] || COVERAGE_LEVEL_RATIO.standard;
+    const min = COVERAGE_LEVEL_MIN[level] || COVERAGE_LEVEL_MIN.standard;
+    const target = Math.min(cityPool.length, Math.max(min, Math.round(cityPool.length * ratio)));
+
+    if (target >= cityPool.length) {
+      return cityPool;
+    }
+
+    return deterministicSample(cityPool, target, `${brand.id || brand.name}|cities`);
   }
 
   const brands = mergedRawBrands.map((brand) => {
-    const cities = deriveBrandCities(brand);
-    return { ...brand, cities, citySet: new Set(cities) };
+    const provinces = deriveBrandProvinces(brand);
+    const cities = deriveBrandCities(brand, provinces);
+    return {
+      ...brand,
+      provinces,
+      provinceSet: new Set(provinces),
+      cities,
+      citySet: new Set(cities)
+    };
   });
 
   const elements = {
-    regionSelect: document.getElementById("regionSelect"),
+    provinceSelect: document.getElementById("provinceSelect"),
     citySelect: document.getElementById("citySelect"),
+    citySearch: document.getElementById("citySearch"),
     categorySelect: document.getElementById("categorySelect"),
     tempSelect: document.getElementById("tempSelect"),
     brandSearch: document.getElementById("brandSearch"),
@@ -301,28 +337,35 @@
     cityTopFive: document.getElementById("cityTopFive"),
     cityTopHint: document.getElementById("cityTopHint"),
     onlyTopFiveToggle: document.getElementById("onlyTopFiveToggle"),
+    avoidRepeatToggle: document.getElementById("avoidRepeatToggle"),
     clearTopPickBtn: document.getElementById("clearTopPickBtn"),
     brandTotal: document.getElementById("brandTotal"),
     cityTotal: document.getElementById("cityTotal"),
     drinkTotal: document.getElementById("drinkTotal"),
     dailyBtn: document.getElementById("dailyBtn"),
     randomBtn: document.getElementById("randomBtn"),
+    surpriseBtn: document.getElementById("surpriseBtn"),
     resetFiltersBtn: document.getElementById("resetFiltersBtn"),
     selectAllBrands: document.getElementById("selectAllBrands"),
     clearAllBrands: document.getElementById("clearAllBrands"),
-    resultCard: document.getElementById("resultCard")
+    resultCard: document.getElementById("resultCard"),
+    recentPicks: document.getElementById("recentPicks")
   };
 
   const state = {
-    region: "全国",
-    city: "全部城市",
-    category: "全部",
-    temperature: "任意温度",
+    province: "\u5168\u56fd",
+    city: "\u5168\u90e8\u57ce\u5e02",
+    citySearch: "",
+    category: "\u5168\u90e8",
+    temperature: "\u4efb\u610f\u6e29\u5ea6",
     search: "",
     onlyTopFive: false,
+    avoidRepeat: true,
     selectedTopPickKey: "",
     cityTopFiveItems: [],
     isDrawing: false,
+    recentCandidateKeys: [],
+    recentPicks: [],
     selectedBrandIds: new Set(brands.map((brand) => brand.id))
   };
 
@@ -337,8 +380,11 @@
     });
   }
 
-  function getAllRegions() {
-    return ["全国", ...REGION_ORDER];
+  function getDisplayedCities() {
+    const keyword = normalizeText(state.citySearch);
+    const source = getCitiesByProvince(state.province);
+    if (!keyword) return source;
+    return source.filter((city) => normalizeText(city).includes(keyword));
   }
 
   function getAllCategories() {
@@ -358,14 +404,14 @@
   }
 
   function isBrandInGeo(brand) {
-    if (state.region !== "全国" && !brand.regions.includes(state.region)) return false;
-    if (state.city !== "全部城市" && !brand.citySet.has(state.city)) return false;
+    if (state.province !== "\u5168\u56fd" && !brand.provinceSet.has(state.province)) return false;
+    if (state.city !== "\u5168\u90e8\u57ce\u5e02" && !brand.citySet.has(state.city)) return false;
     return true;
   }
 
   function getUnavailableReason(brand) {
-    if (state.region !== "全国" && !brand.regions.includes(state.region)) return "该地区暂无";
-    if (state.city !== "全部城市" && !brand.citySet.has(state.city)) return "该城市暂无";
+    if (state.province !== "\u5168\u56fd" && !brand.provinceSet.has(state.province)) return "\u8be5\u7701\u6682\u65e0";
+    if (state.city !== "\u5168\u90e8\u57ce\u5e02" && !brand.citySet.has(state.city)) return "\u8be5\u57ce\u5e02\u6682\u65e0";
     return "";
   }
 
@@ -379,20 +425,28 @@
   }
 
   function renderFilterSummary() {
-    const topLabel = state.onlyTopFive ? (state.city === "全部城市" ? "TOP5限定（请先选城市）" : "TOP5限定") : "全量候选";
-    const lockLabel = state.selectedTopPickKey ? "已锁定一个TOP项" : "未锁定TOP项";
-    elements.filterSummary.textContent = `当前位置：${state.region} · ${state.city}，偏好：${state.temperature}，品类：${state.category}，模式：${topLabel}（${lockLabel}）`;
+    const topLabel = state.onlyTopFive
+      ? state.city === "\u5168\u90e8\u57ce\u5e02"
+        ? "TOP5\u9650\u5b9a\uff08\u8bf7\u5148\u9009\u57ce\u5e02\uff09"
+        : "TOP5\u9650\u5b9a"
+      : "\u5168\u91cf\u5019\u9009";
+    const lockLabel = state.selectedTopPickKey ? "\u5df2\u9501\u5b9a\u4e00\u4e2aTOP\u9879" : "\u672a\u9501\u5b9aTOP\u9879";
+    const searchLabel = state.citySearch ? "\uff0c\u57ce\u5e02\u68c0\u7d22\uff1a" + state.citySearch : "";
+    const dedupeLabel = state.avoidRepeat ? "\u53bb\u91cd\u5f00\u542f" : "\u53bb\u91cd\u5173\u95ed";
+    elements.filterSummary.textContent = "\u5f53\u524d\u4f4d\u7f6e\uff1a" + state.province + " \u00b7 " + state.city + searchLabel + "\uff0c\u504f\u597d\uff1a" + state.temperature + "\uff0c\u54c1\u7c7b\uff1a" + state.category + "\uff0c\u6a21\u5f0f\uff1a" + topLabel + "\uff08" + lockLabel + "\uff0c" + dedupeLabel + "\uff09";
   }
 
   function renderFilters() {
-    fillSelect(elements.regionSelect, getAllRegions(), state.region);
-    const cityOptions = ["全部城市", ...getCitiesByRegion(state.region)];
-    if (!cityOptions.includes(state.city)) state.city = "全部城市";
+    fillSelect(elements.provinceSelect, getAllProvinces(), state.province);
+    const cityOptions = ["\u5168\u90e8\u57ce\u5e02", ...getDisplayedCities()];
+    if (!cityOptions.includes(state.city)) state.city = "\u5168\u90e8\u57ce\u5e02";
     fillSelect(elements.citySelect, cityOptions, state.city);
     fillSelect(elements.categorySelect, getAllCategories(), state.category);
     fillSelect(elements.tempSelect, getAllTemperatures(), state.temperature);
+    elements.citySearch.value = state.citySearch;
     elements.brandSearch.value = state.search;
     elements.onlyTopFiveToggle.checked = state.onlyTopFive;
+    elements.avoidRepeatToggle.checked = state.avoidRepeat;
     renderFilterSummary();
   }
 
@@ -531,7 +585,7 @@
 
     brands.forEach((brand) => {
       if (!state.selectedBrandIds.has(brand.id)) return;
-      if (state.region !== "全国" && !brand.regions.includes(state.region)) return;
+      if (state.province !== "全国" && !brand.provinceSet.has(state.province)) return;
 
       const hasMatchDrink = brand.drinks.some((drink) => {
         if (state.category !== "全部" && drink.category !== state.category) return false;
@@ -541,7 +595,7 @@
 
       if (!hasMatchDrink) return;
 
-      getCitiesByRegion(state.region).forEach((city) => {
+      getCitiesByProvince(state.province).forEach((city) => {
         if (brand.citySet.has(city) && (state.city === "全部城市" || city === state.city)) covered.add(city);
       });
     });
@@ -558,6 +612,36 @@
     const coverage = countCoverageCities();
     elements.candidateCount.textContent = `符合条件：${candidates.length} 款 | 覆盖城市：${coverage} 个`;
     renderFilterSummary();
+  }
+
+  function renderRecentPicks() {
+    if (!elements.recentPicks) return;
+
+    if (state.recentPicks.length === 0) {
+      elements.recentPicks.innerHTML = '<p class="recent-empty">\u8fd1\u671f\u968f\u673a\u62bd\u53d6\uff1a\u6682\u65e0</p>';
+      return;
+    }
+
+    const chips = state.recentPicks.map((item) => '<span class="recent-chip">' + item.text + '</span>').join('');
+    elements.recentPicks.innerHTML = '<p class="recent-title">\u8fd1\u671f\u968f\u673a\u62bd\u53d6</p><div class="recent-chip-row">' + chips + '</div>';
+  }
+
+  function chooseCandidate(candidates, randomFn, avoidRepeat) {
+    if (!avoidRepeat || !state.avoidRepeat || state.recentCandidateKeys.length === 0) {
+      return chooseFrom(candidates, randomFn);
+    }
+
+    const recentSet = new Set(state.recentCandidateKeys);
+    const deduped = candidates.filter((candidate) => !recentSet.has(candidateKey(candidate)));
+    return chooseFrom(deduped.length ? deduped : candidates, randomFn);
+  }
+
+  function rememberRandomPick(candidate, result) {
+    const key = candidateKey(candidate);
+    state.recentCandidateKeys = [key, ...state.recentCandidateKeys.filter((item) => item !== key)].slice(0, 8);
+    const text = result.brand.name + ' \u00b7 ' + result.drink.name;
+    state.recentPicks = [{ key, text }, ...state.recentPicks.filter((item) => item.key !== key)].slice(0, 5);
+    renderRecentPicks();
   }
 
   function todayKey() {
@@ -591,7 +675,7 @@
 
   function getRecommendationCity(brand, randomFn) {
     if (state.city !== "全部城市") return state.city;
-    const cityPool = getCitiesByRegion(state.region).filter((city) => brand.citySet.has(city));
+    const cityPool = getCitiesByProvince(state.province).filter((city) => brand.citySet.has(city));
     return chooseFrom(cityPool, randomFn) || chooseFrom(brand.cities, randomFn) || "城市待补充";
   }
 
@@ -606,12 +690,14 @@
     return template.replaceAll("{drink}", result.drink.name).replaceAll("{city}", result.city).replaceAll("{brand}", result.brand.name);
   }
 
-  function pickRecommendation(candidates, randomFn) {
+  function pickRecommendation(candidates, randomFn, options = {}) {
     if (candidates.length === 0) return null;
 
-    const candidate = chooseFrom(candidates, randomFn);
-    const size = chooseFrom(candidate.drink.sizes, randomFn) || "常规杯";
-    const service = state.temperature === "任意温度" ? chooseFrom(candidate.drink.serve, randomFn) : state.temperature;
+    const candidate = chooseCandidate(candidates, randomFn, options.avoidRepeat === true);
+    if (!candidate) return null;
+
+    const size = chooseFrom(candidate.drink.sizes, randomFn) || "\u5e38\u89c4\u676f";
+    const service = state.temperature === "\u4efb\u610f\u6e29\u5ea6" ? chooseFrom(candidate.drink.serve, randomFn) : state.temperature;
     const sugar = chooseFrom(getSugarOptions(candidate.drink.category), randomFn);
     const ice = chooseFrom(getIceOptions(service), randomFn);
     const city = getRecommendationCity(candidate.brand, randomFn);
@@ -630,6 +716,11 @@
     };
 
     result.giftMessage = createGiftMessage(result, randomFn);
+
+    if (options.recordRecent) {
+      rememberRandomPick(candidate, result);
+    }
+
     return result;
   }
 
@@ -688,19 +779,20 @@
 
   function getSeedKey(dateKeyValue) {
     const sortedBrandIds = [...state.selectedBrandIds].sort().join(",");
-    return [dateKeyValue, state.region, state.city, state.category, state.temperature, state.onlyTopFive, state.selectedTopPickKey, sortedBrandIds].join("|");
+    return [dateKeyValue, state.province, state.city, state.category, state.temperature, state.onlyTopFive, state.selectedTopPickKey, sortedBrandIds].join("|");
   }
 
   function getDailyRecommendation(candidates) {
     const dateKeyValue = todayKey();
     const rng = mulberry32(hashString(getSeedKey(dateKeyValue)));
-    return { result: pickRecommendation(candidates, rng), dateKeyValue };
+    return { result: pickRecommendation(candidates, rng, { avoidRepeat: false, recordRecent: false }), dateKeyValue };
   }
 
   function setDrawingState(isDrawing) {
     state.isDrawing = isDrawing;
     elements.dailyBtn.disabled = isDrawing;
     elements.randomBtn.disabled = isDrawing;
+    elements.surpriseBtn.disabled = isDrawing;
     elements.resetFiltersBtn.disabled = isDrawing;
   }
 
@@ -725,14 +817,14 @@
     let frame = 0;
     const timer = setInterval(() => {
       frame += 1;
-      renderPreview(pickRecommendation(candidates, Math.random));
+      renderPreview(pickRecommendation(candidates, Math.random, { avoidRepeat: false, recordRecent: false }));
       if (frame >= 10) {
         clearInterval(timer);
         if (mode === "daily") {
           const { result, dateKeyValue } = getDailyRecommendation(candidates);
           renderResult(result, "daily", dateKeyValue);
         } else {
-          renderResult(pickRecommendation(candidates, Math.random), "random", todayKey());
+          renderResult(pickRecommendation(candidates, Math.random, { avoidRepeat: true, recordRecent: true }), "random", todayKey());
         }
         refreshTopFiveAndCounts();
         setDrawingState(false);
@@ -740,24 +832,50 @@
     }, 90);
   }
 
+  function runSurprisePick() {
+    if (state.isDrawing) return;
+
+    state.province = chooseFrom(getAllProvinces(), Math.random) || "\u5168\u56fd";
+    state.citySearch = "";
+
+    const provinceCities = getCitiesByProvince(state.province);
+    state.city = Math.random() < 0.48 ? chooseFrom(provinceCities, Math.random) || "\u5168\u90e8\u57ce\u5e02" : "\u5168\u90e8\u57ce\u5e02";
+
+    state.category = chooseFrom(getAllCategories(), Math.random) || "\u5168\u90e8";
+    state.temperature = chooseFrom(getAllTemperatures(), Math.random) || "\u4efb\u610f\u6e29\u5ea6";
+    state.onlyTopFive = state.city !== "\u5168\u90e8\u57ce\u5e02" ? Math.random() < 0.4 : false;
+    state.selectedTopPickKey = "";
+
+    renderFilters();
+    renderBrandList();
+    runPick("random");
+  }
+
   function resetFilters() {
-    state.region = "全国";
-    state.city = "全部城市";
-    state.category = "全部";
-    state.temperature = "任意温度";
+    state.province = "\u5168\u56fd";
+    state.city = "\u5168\u90e8\u57ce\u5e02";
+    state.citySearch = "";
+    state.category = "\u5168\u90e8";
+    state.temperature = "\u4efb\u610f\u6e29\u5ea6";
     state.search = "";
     state.onlyTopFive = false;
+    state.avoidRepeat = true;
     state.selectedTopPickKey = "";
+    state.recentCandidateKeys = [];
+    state.recentPicks = [];
     state.selectedBrandIds = new Set(brands.map((brand) => brand.id));
 
     renderFilters();
     renderBrandList();
+    renderRecentPicks();
     runDailyImmediate();
   }
 
   function bindEvents() {
-    elements.regionSelect.addEventListener("change", (event) => {
-      state.region = event.target.value;
+    elements.provinceSelect.addEventListener("change", (event) => {
+      state.province = event.target.value;
+      state.city = "\u5168\u90e8\u57ce\u5e02";
+      state.citySearch = "";
       state.selectedTopPickKey = "";
       renderFilters();
       renderBrandList();
@@ -767,6 +885,16 @@
     elements.citySelect.addEventListener("change", (event) => {
       state.city = event.target.value;
       state.selectedTopPickKey = "";
+      renderBrandList();
+      runDailyImmediate();
+    });
+
+    elements.citySearch.addEventListener("input", (event) => {
+      state.citySearch = event.target.value.trim();
+      if (state.city !== "\u5168\u90e8\u57ce\u5e02" && !getDisplayedCities().includes(state.city)) {
+        state.city = "\u5168\u90e8\u57ce\u5e02";
+      }
+      renderFilters();
       renderBrandList();
       runDailyImmediate();
     });
@@ -794,6 +922,11 @@
       runDailyImmediate();
     });
 
+    elements.avoidRepeatToggle.addEventListener("change", (event) => {
+      state.avoidRepeat = event.target.checked;
+      renderFilterSummary();
+    });
+
     elements.clearTopPickBtn.addEventListener("click", () => {
       state.selectedTopPickKey = "";
       runDailyImmediate();
@@ -816,13 +949,20 @@
 
     elements.dailyBtn.addEventListener("click", () => runPick("daily"));
     elements.randomBtn.addEventListener("click", () => runPick("random"));
+    elements.surpriseBtn.addEventListener("click", runSurprisePick);
     elements.resetFiltersBtn.addEventListener("click", resetFilters);
   }
 
   function init() {
+    if (!PROVINCE_ORDER.length) {
+      renderEmpty("\u7701\u5e02\u6570\u636e\u52a0\u8f7d\u5931\u8d25\uff0c\u8bf7\u5237\u65b0\u9875\u9762\u540e\u91cd\u8bd5\u3002");
+      return;
+    }
+
     renderStats();
     renderFilters();
     renderBrandList();
+    renderRecentPicks();
     bindEvents();
     runDailyImmediate();
   }

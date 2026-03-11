@@ -502,10 +502,18 @@
 
   function popularityScore(candidate, city) {
     const base = CATEGORY_HEAT[candidate.drink.category] || 80;
-    const cityBoost = hashString(`${city}|${candidate.drink.name}`) % 14;
-    const brandBoost = hashString(candidate.brand.name) % 12;
-    const wave = hashString(`${city}|${candidate.brand.id}|${candidate.drink.name}`) % 10;
-    return Math.min(99, base + Math.floor(cityBoost / 2) + Math.floor(brandBoost / 2) + Math.floor(wave / 2));
+    const cityCandidate = hashString(city + "|" + candidate.brand.id + "|" + candidate.drink.name) % 100;
+    const cityCategory = hashString(city + "|" + candidate.drink.category) % 35;
+    const cityBrand = hashString(city + "|" + candidate.brand.name) % 20;
+
+    const score =
+      50 +
+      Math.floor(base * 0.12) +
+      Math.floor(cityCandidate * 0.33) +
+      Math.floor(cityCategory * 0.35) +
+      Math.floor(cityBrand * 0.2);
+
+    return Math.min(99, score);
   }
 
   function getTopFiveForCurrentCity(baseCandidates) {
@@ -520,7 +528,7 @@
     });
 
     return [...map.values()]
-      .sort((a, b) => b.hotScore - a.hotScore)
+      .sort((a, b) => (b.hotScore - a.hotScore) || (hashString(state.city + "|" + candidateKey(b)) - hashString(state.city + "|" + candidateKey(a))))
       .slice(0, 5)
       .map((item, idx) => ({ ...item, rank: idx + 1 }));
   }

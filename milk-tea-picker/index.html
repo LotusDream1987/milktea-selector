@@ -1,0 +1,132 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>今天喝什么奶茶</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="aurora aurora-a"></div>
+    <div class="aurora aurora-b"></div>
+    <div class="aurora aurora-c"></div>
+
+    <main class="page">
+      <header class="hero glass">
+        <div class="hero-copy">
+          <p class="hero-sub">Daily Milk Tea Picker</p>
+          <h1>今天喝什么奶茶</h1>
+          <p class="hero-desc">
+            城市级热榜 + 加盟品牌扩充 + 治愈赠语。纠结的时候，让它替你做一次温柔选择。
+          </p>
+
+          <div class="stat-row">
+            <div class="stat-box">
+              <p id="brandTotal">0</p>
+              <span>品牌</span>
+            </div>
+            <div class="stat-box">
+              <p id="cityTotal">0</p>
+              <span>城市</span>
+            </div>
+            <div class="stat-box">
+              <p id="drinkTotal">0</p>
+              <span>饮品</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-cup-wrap" aria-hidden="true">
+          <div class="cup">
+            <div class="tea-surface"></div>
+            <div class="straw"></div>
+            <span class="boba b1"></span>
+            <span class="boba b2"></span>
+            <span class="boba b3"></span>
+            <span class="boba b4"></span>
+          </div>
+        </div>
+      </header>
+
+      <section class="panel glass">
+        <div class="control-grid">
+          <label class="field">
+            <span>地区</span>
+            <select id="regionSelect"></select>
+          </label>
+          <label class="field">
+            <span>城市</span>
+            <select id="citySelect"></select>
+          </label>
+          <label class="field">
+            <span>品类</span>
+            <select id="categorySelect"></select>
+          </label>
+          <label class="field">
+            <span>冷热偏好</span>
+            <select id="tempSelect"></select>
+          </label>
+          <label class="field field-wide">
+            <span>品牌搜索</span>
+            <input id="brandSearch" type="text" placeholder="输入品牌名，例如：霸王茶姬" autocomplete="off" />
+          </label>
+        </div>
+
+        <p id="filterSummary" class="filter-summary"></p>
+
+        <div class="city-top-wrap">
+          <div class="city-top-head">
+            <h3>当前城市 TOP5 热门</h3>
+            <div class="city-top-tools">
+              <label class="switch-line">
+                <input id="onlyTopFiveToggle" type="checkbox" />
+                <span>仅在 TOP5 里抽</span>
+              </label>
+              <button id="clearTopPickBtn" class="btn ghost small">清空热榜选择</button>
+            </div>
+          </div>
+          <p id="cityTopHint" class="city-top-hint"></p>
+          <div id="cityTopFive" class="city-top-list"></div>
+        </div>
+
+        <div class="brand-toolbar">
+          <p id="brandCount">已选品牌：0</p>
+          <div class="toolbar-btns">
+            <button id="selectAllBrands" class="btn ghost">全选当前品牌</button>
+            <button id="clearAllBrands" class="btn ghost">清空当前品牌</button>
+          </div>
+        </div>
+
+        <div id="brandList" class="brand-list"></div>
+
+        <div class="action-row">
+          <button id="dailyBtn" class="btn primary">今日固定推荐</button>
+          <button id="randomBtn" class="btn secondary">再抽一杯</button>
+          <button id="resetFiltersBtn" class="btn ghost">重置筛选</button>
+        </div>
+      </section>
+
+      <section class="result-wrap glass">
+        <div class="result-title">
+          <h2>推荐结果</h2>
+          <p id="candidateCount">符合条件：0 款</p>
+        </div>
+
+        <article id="resultCard" class="result-card empty">
+          <p>设置筛选条件后，点击“今日固定推荐”或“再抽一杯”。</p>
+        </article>
+      </section>
+
+      <section class="tips glass">
+        <h3>布局说明</h3>
+        <p>
+          先选地区和城市，再看城市热门 TOP5；你可以直接点某个 TOP 项锁定抽取，或者开启“仅在 TOP5 里抽”。
+          推荐结果会给出显眼的暖心赠语。
+        </p>
+      </section>
+    </main>
+
+    <script src="./data.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
